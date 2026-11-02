@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Institutional Fintech & Quantitative Trading Dashboard | Ilekuba Chinedu</title>
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+  <!-- Top Status & Account Ticker -->
+  <header class="top-nav">
+    <div class="brand-section">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2.5">
+        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+      </svg>
+      <span>APEX QUANT TERMINAL</span>
+      <span class="brand-badge">PRO DESK</span>
+    </div>
+
+    <div class="metrics-strip">
+      <div class="metric-item">
+        <span class="metric-label">Balance:</span>
+        <span class="metric-val" id="balance-val">$50,000.00</span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-label">Equity:</span>
+        <span class="metric-val" id="equity-val">$50,630.00</span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-label">Floating P&L:</span>
+        <span class="metric-val val-green" id="floating-val">+$630.00</span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-label">Server Ping:</span>
+        <span class="metric-val val-green" style="font-size: 11px;">● 12ms (LD4 Equinix)</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Trading Desk Grid -->
+  <main class="dashboard-grid">
+
+    <!-- LEFT: Market Watchlist -->
+    <aside class="panel">
+      <div class="panel-header">
+        <span>Market Watchlist</span>
+        <span style="font-size: 10px; color: var(--color-bullish);">LIVE STREAM</span>
+      </div>
+      <div class="watchlist-items" id="watchlist-container">
+        <!-- Rendered dynamically by dashboard.js -->
+      </div>
+    </aside>
+
+    <!-- CENTER: Candlestick Chart Engine -->
+    <section class="panel">
+      <div class="chart-controls">
+        <div class="tf-group">
+          <button class="tf-btn" data-tf="M1">M1</button>
+          <button class="tf-btn" data-tf="M5">M5</button>
+          <button class="tf-btn active" data-tf="M15">M15</button>
+          <button class="tf-btn" data-tf="H1">H1</button>
+          <button class="tf-btn" data-tf="D1">D1</button>
+        </div>
+        <div style="font-size: 12px; color: var(--color-text-secondary); display: flex; gap: 12px;">
+          <span>Engine: <strong>60 FPS Canvas</strong></span>
+          <span>Timeframe: <strong>M15</strong></span>
+        </div>
+      </div>
+      <div class="canvas-container">
+        <canvas id="main-chart"></canvas>
+      </div>
+    </section>
+
+    <!-- RIGHT: One-Click Execution Panel -->
+    <aside class="panel">
+      <div class="panel-header">
+        <span>Order Execution</span>
+        <span id="current-symbol-label" style="color: var(--color-accent); font-weight: 700;">XAUUSD</span>
+      </div>
+      <div class="order-entry">
+        <!-- Buy / Sell Execution Buttons -->
+        <div class="btn-dual">
+          <button class="btn-trade btn-sell" id="btn-sell">
+            <span>SELL</span>
+            <span class="trade-rate" id="sell-price-tag">2742.00</span>
+          </button>
+          <button class="btn-trade btn-buy" id="btn-buy">
+            <span>BUY</span>
+            <span class="trade-rate" id="buy-price-tag">2743.00</span>
+          </button>
+        </div>
+
+        <!-- Lot Sizing -->
+        <div class="input-row">
+          <label>Volume (Lots)</label>
+          <input class="input-field" type="number" id="order-lots" value="1.00" step="0.10" min="0.01">
+        </div>
+
+        <!-- Stop Loss -->
+        <div class="input-row">
+          <label>Stop Loss (Pips)</label>
+          <input class="input-field" type="number" id="order-sl" value="25" step="5">
+        </div>
+
+        <!-- Take Profit -->
+        <div class="input-row">
+          <label>Take Profit (Pips)</label>
+          <input class="input-field" type="number" id="order-tp" value="50" step="5">
+        </div>
+
+        <!-- Risk Summary -->
+        <div class="risk-summary">
+          <div style="display: flex; justify-content: space-between; color: var(--color-text-muted);">
+            <span>Risk / Reward:</span>
+            <span style="font-weight: 700; color: var(--color-text-main);">1 : 2.0</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; color: var(--color-text-muted);">
+            <span>Margin Required:</span>
+            <span style="font-weight: 700; color: var(--color-text-main);">$1,000.00</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+  </main>
+
+  <!-- BOTTOM: Positions & Order Ledger -->
+  <footer class="bottom-positions">
+    <div class="panel-header" style="background: var(--bg-surface-elevated);">
+      <span>Active Trading Positions & Floating Ledger</span>
+      <span style="font-size: 11px; color: var(--color-text-muted);">Mark-to-Market Real-Time Calculation</span>
+    </div>
+    <div style="overflow-y: auto; flex: 1;">
+      <table class="positions-table">
+        <thead>
+          <tr>
+            <th>Order #</th>
+            <th>Symbol</th>
+            <th>Type</th>
+            <th>Lots</th>
+            <th>Open Price</th>
+            <th>Current Price</th>
+            <th>S/L</th>
+            <th>T/P</th>
+            <th>Net Profit</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="positions-body">
+          <!-- Rendered dynamically by dashboard.js -->
+        </tbody>
+      </table>
+    </div>
+  </footer>
+
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
